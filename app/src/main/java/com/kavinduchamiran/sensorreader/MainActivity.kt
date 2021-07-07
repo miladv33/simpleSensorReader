@@ -29,18 +29,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
+        super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
 
-        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-//        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
             mSensorManager.registerListener(
                 this,
@@ -57,8 +56,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 SensorManager.SENSOR_DELAY_UI
             )
         }
-        mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
-        mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+            mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
+            mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {

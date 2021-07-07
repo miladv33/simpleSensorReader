@@ -1,15 +1,14 @@
 package com.kavinduchamiran.sensorreader
 
-import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import android.widget.TextView
+import com.kavinduchamiran.sensorreader.listeners.SensorChangesListener
 import kotlin.math.roundToInt
 
-interface DirectionFinder : SensorEventListener {
+interface DirectionFinder : SensorEventListener,SensorChangesListener {
     var rotationMatrix: FloatArray
         get() = FloatArray(9)
         set(value) {}
@@ -19,16 +18,22 @@ interface DirectionFinder : SensorEventListener {
     var accelerometerReading: FloatArray
         get() = FloatArray(3)
         set(value) {}
-    var magnetometerReading: FloatArray
+    var gyroscopeReading: FloatArray
         get() = FloatArray(3)
+        set(value) {}
+    var magneReading: FloatArray
+        get() = FloatArray(1)
+        set(value) {}
+    var lightReading: FloatArray
+        get() = FloatArray(1)
         set(value) {}
     var mSensorManager: SensorManager
     var mAccelerometer: Sensor?
     var mMagnet: Sensor?
     var mLight: Sensor
     var mGyroscope: Sensor
-    var resume: Boolean
 
+    fun stopListening():Boolean
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         print("accuracy changed")
@@ -37,29 +42,26 @@ interface DirectionFinder : SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         if (event != null ) {
             if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
-//                findViewById<TextView>(R.id.acc_X).text = event.values[0].toString()
-//                findViewById<TextView>(R.id.acc_Y).text = event.values[1].toString()
-//                findViewById<TextView>(R.id.acc_Z).text = event.values[2].toString()
                 Log.i("miladTestInterface", "onSensorChanged: X = ${event.values[0]}")
                 Log.i("miladTestInterface", "onSensorChanged: Y = ${event.values[1]}")
                 Log.i("miladTestInterface", "onSensorChanged: Z = ${event.values[2]}")
                 System.arraycopy(event.values,0,accelerometerReading,0, accelerometerReading.size)
+                onAccelerometerChanged(event.values)
             }
             if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
-                System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)
+                System.arraycopy(event.values, 0, magneReading, 0, magneReading.size)
+                onMagnetChanged(event.values)
             }
             if (event.sensor.type == Sensor.TYPE_LIGHT) {
+                System.arraycopy(event.values, 0, lightReading, 0, lightReading.size)
+                onLightChanged(event.values)
                 Log.i("miladTestInterface", "onSensorChanged: light = ${event.values[0]}")
-//                findViewById<TextView>(R.id.light).text = event.values[0].toString()
             }
 
             if (event.sensor.type == Sensor.TYPE_GYROSCOPE) {
-//                findViewById<TextView>(R.id.gyro_x).text =
-//                    ((Math.toDegrees(event.values[0].toDouble()) + 360) % 360).toString()
-//                findViewById<TextView>(R.id.gyro_y).text =
-//                    ((Math.toDegrees(event.values[1].toDouble()) + 360) % 360).toString()
-//                findViewById<TextView>(R.id.gyro_z).text =
-//                    ((Math.toDegrees(event.values[2].toDouble()) + 360) % 360).toString()
+//
+                System.arraycopy(event.values, 0, gyroscopeReading, 0, magneReading.size)
+                onGyroscopeChanged(event.values)
                 Log.i("miladTestInterface", "onSensorChanged: x = ${ ((Math.toDegrees(event.values[0].toDouble()) + 360) % 360)}")
                 Log.i("miladTestInterface", "onSensorChanged: y = ${ ((Math.toDegrees(event.values[1].toDouble()) + 360) % 360)}")
                 Log.i("miladTestInterface", "onSensorChanged: z = ${ ((Math.toDegrees(event.values[2].toDouble()) + 360) % 360)}")
@@ -80,7 +82,7 @@ interface DirectionFinder : SensorEventListener {
             rotationMatrix,
             null,
             accelerometerReading,
-            magnetometerReading
+            magneReading
         )
 //            // 2
         val orientation = SensorManager.getOrientation(rotationMatrix, orientationAngles)

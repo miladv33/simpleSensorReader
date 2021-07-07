@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 findViewById<TextView>(R.id.acc_X).text = event.values[0].toString()
                 findViewById<TextView>(R.id.acc_Y).text = event.values[1].toString()
                 findViewById<TextView>(R.id.acc_Z).text = event.values[2].toString()
+                System.arraycopy(event.values, 0, accelerometerReading, 0, accelerometerReading.size)
             }
             if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
                 System.arraycopy(event.values, 0, magnetometerReading, 0, magnetometerReading.size)

@@ -17,10 +17,10 @@ import java.lang.Math.round
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
-    private lateinit var mSensorManager : SensorManager
-    private var mAccelerometer : Sensor ?= null
-    private var mLight : Sensor ?= null
-    private var mGyroscope : Sensor ?= null
+    private lateinit var mSensorManager: SensorManager
+    private var mAccelerometer: Sensor? = null
+    private var mLight: Sensor? = null
+    private var mGyroscope: Sensor? = null
     private var resume = false
     private val rotationMatrix = FloatArray(9)
     private val orientationAngles = FloatArray(3)
@@ -32,7 +32,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,7 +42,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
 //        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
-            mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL, SensorManager.SENSOR_DELAY_UI)
+            mSensorManager.registerListener(
+                this,
+                accelerometer,
+                SensorManager.SENSOR_DELAY_NORMAL,
+                SensorManager.SENSOR_DELAY_UI
+            )
         }
         mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also { magneticField ->
             mSensorManager.registerListener(
@@ -74,13 +80,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
 
             if (event.sensor.type == Sensor.TYPE_GYROSCOPE) {
-                findViewById<TextView>(R.id.gyro_x).text = ((Math.toDegrees(event.values[0].toDouble()) + 360) % 360).toString()
-                findViewById<TextView>(R.id.gyro_y).text = ((Math.toDegrees(event.values[1].toDouble()) + 360) % 360).toString()
-                findViewById<TextView>(R.id.gyro_z).text = ((Math.toDegrees(event.values[2].toDouble()) + 360) % 360).toString()
+                findViewById<TextView>(R.id.gyro_x).text =
+                    ((Math.toDegrees(event.values[0].toDouble()) + 360) % 360).toString()
+                findViewById<TextView>(R.id.gyro_y).text =
+                    ((Math.toDegrees(event.values[1].toDouble()) + 360) % 360).toString()
+                findViewById<TextView>(R.id.gyro_z).text =
+                    ((Math.toDegrees(event.values[2].toDouble()) + 360) % 360).toString()
             }
             updateOrientationAngles()
         }
     }
+
     /*
        orientation[0] = Azimuth (rotation around the -ve z-axis)
        orientation[1] = Pitch (rotation around the x-axis)
@@ -88,7 +98,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     */
     private fun updateOrientationAngles() {
         // 1
-        SensorManager.getRotationMatrix(rotationMatrix, null, accelerometerReading, magnetometerReading)
+        SensorManager.getRotationMatrix(
+            rotationMatrix,
+            null,
+            accelerometerReading,
+            magnetometerReading
+        )
         // 2
         val orientation = SensorManager.getOrientation(rotationMatrix, orientationAngles)
         // 3
@@ -104,25 +119,25 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         Log.i("miladTestOrientation", "updateOrientationAngles: direction: $direction")
     }
 
-    private fun getDirection(angle: Double): String {
-        var direction = ""
+    private fun getDirection(angle: Double): Direction {
+        var direction: Direction = Direction.N
 
         if (angle >= 350 || angle <= 10)
-            direction = "N"
+            direction = Direction.N
         if (angle < 350 && angle > 280)
-            direction = "NW"
+            direction = Direction.NW
         if (angle <= 280 && angle > 260)
-            direction = "W"
+            direction = Direction.W
         if (angle <= 260 && angle > 190)
-            direction = "SW"
+            direction = Direction.SW
         if (angle <= 190 && angle > 170)
-            direction = "S"
+            direction = Direction.S
         if (angle <= 170 && angle > 100)
-            direction = "SE"
+            direction = Direction.SE
         if (angle <= 100 && angle > 80)
-            direction = "E"
+            direction = Direction.E
         if (angle <= 80 && angle > 10)
-            direction = "NE"
+            direction = Direction.NE
 
         return direction
     }

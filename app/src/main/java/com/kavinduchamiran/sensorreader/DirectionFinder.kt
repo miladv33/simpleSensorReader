@@ -1,5 +1,6 @@
 package com.kavinduchamiran.sensorreader
 
+import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -12,7 +13,30 @@ interface DirectionFinder : SensorEventListener, SensorChangesListener {
 
     fun stopListening(): Boolean
 
-    fun startToFindSensor()
+    fun startToFindSensor(context: Context){
+        with(SensorObject) {
+
+            mSensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+            mAccelerometer = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
+                mSensorManager?.registerListener(
+                    this@DirectionFinder,
+                    accelerometer,
+                    SensorManager.SENSOR_DELAY_GAME,
+                    SensorManager.SENSOR_DELAY_UI
+                )
+            }
+            mMagnet = mSensorManager?.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also { magneticField ->
+                mSensorManager?.registerListener(
+                    this@DirectionFinder,
+                    magneticField,
+                    SensorManager.SENSOR_DELAY_GAME,
+                    SensorManager.SENSOR_DELAY_UI
+                )
+            }
+            mLight = mSensorManager?.getDefaultSensor(Sensor.TYPE_LIGHT)
+            mGyroscope = mSensorManager?.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+        }
+    }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         print("accuracy changed")
@@ -116,5 +140,43 @@ interface DirectionFinder : SensorEventListener, SensorChangesListener {
         return direction
     }
 
+    fun resumeListeningToSensors() {
+        with(SensorObject) {
+            mSensorManager?.registerListener(
+                this@DirectionFinder,
+                mAccelerometer,
+                SensorManager.SENSOR_DELAY_NORMAL
+            )
+            mSensorManager?.registerListener(
+                this@DirectionFinder,
+                mMagnet,
+                SensorManager.SENSOR_DELAY_NORMAL
+            )
+            mSensorManager?.registerListener(
+                this@DirectionFinder,
+                mLight,
+                SensorManager.SENSOR_DELAY_NORMAL
+            )
+            mSensorManager?.registerListener(
+                this@DirectionFinder,
+                mGyroscope,
+                SensorManager.SENSOR_DELAY_NORMAL
+            )
+        }
+    }
 
+    fun pauseListeningToSensors() {
+        SensorObject.mSensorManager?.unregisterListener(this)
+    }
+
+    fun destroyListeningToSensors() {
+        with(SensorObject) {
+            mSensorManager = null
+            mSensorManager = null
+            mAccelerometer = null
+            mMagnet = null
+            mLight = null
+            mGyroscope = null
+        }
+    }
 }

@@ -19,30 +19,6 @@ import kotlin.math.roundToInt
 class MainActivity : AppCompatActivity(), DirectionFinder {
 
     private var resume = false
-    override fun startToFindSensor() {
-        with(SensorObject) {
-
-            mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-            mAccelerometer = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
-                    mSensorManager?.registerListener(
-                        this@MainActivity,
-                        accelerometer,
-                        SensorManager.SENSOR_DELAY_NORMAL,
-                        SensorManager.SENSOR_DELAY_UI
-                    )
-                }
-            mMagnet = mSensorManager?.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also { magneticField ->
-                    mSensorManager?.registerListener(
-                        this@MainActivity,
-                        magneticField,
-                        SensorManager.SENSOR_DELAY_NORMAL,
-                        SensorManager.SENSOR_DELAY_UI
-                    )
-                }
-            mLight = mSensorManager?.getDefaultSensor(Sensor.TYPE_LIGHT)
-            mGyroscope = mSensorManager?.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -53,23 +29,23 @@ class MainActivity : AppCompatActivity(), DirectionFinder {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         setContentView(R.layout.activity_main)
-        startToFindSensor()
+        startToFindSensor(this)
     }
 
 
     override fun onResume() {
         super.onResume()
-        with(SensorObject) {
-            mSensorManager?.registerListener(this@MainActivity, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
-            mSensorManager?.registerListener(this@MainActivity, mMagnet, SensorManager.SENSOR_DELAY_NORMAL)
-            mSensorManager?.registerListener(this@MainActivity, mLight, SensorManager.SENSOR_DELAY_NORMAL)
-            mSensorManager?.registerListener(this@MainActivity, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL)
-        }
+        resumeListeningToSensors()
     }
 
     override fun onPause() {
         super.onPause()
-        SensorObject.mSensorManager?.unregisterListener(this)
+        pauseListeningToSensors()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        destroyListeningToSensors()
     }
 
     fun resumeReading(view: View) {

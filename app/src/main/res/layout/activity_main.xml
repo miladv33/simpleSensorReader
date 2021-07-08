@@ -11,10 +11,11 @@
         android:id="@+id/tableLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="196dp"
+        android:layout_marginBottom="20dp"
         android:padding="5dp"
         android:stretchColumns="2"
         app:layout_constraintBottom_toTopOf="@+id/stop_button"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
         tools:context=".MainActivity"
         tools:layout_editor_absoluteX="16dp">
 
@@ -176,6 +177,7 @@
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
@@ -195,6 +197,7 @@
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
@@ -214,6 +217,7 @@
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
@@ -233,6 +237,7 @@
         </TableRow>
 
         <TableRow>
+
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
@@ -282,10 +287,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Copyrights: 2019 \nKavindu Chamiran"
+        android:text="Copyrights: 2019 \nKavindu Chamiran \n refactor and edit by Milad Mousavi 2021"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display4"
-        android:textSize="30sp"
+        android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

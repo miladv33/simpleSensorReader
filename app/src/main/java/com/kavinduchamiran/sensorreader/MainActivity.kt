@@ -119,9 +119,12 @@ class MainActivity : AppCompatActivity(), DirectionFinder {
     }
 
     override fun onUpdateOrientationAngles(degrees: Double, angle: Int, direction: Direction) {
-        Log.i("miladTestOrientation", "updateOrientationAngles: degrees: $degrees")
-        Log.i("miladTestOrientation", "updateOrientationAngles: angle: $angle")
-        Log.i("miladTestOrientation", "updateOrientationAngles: direction: $direction")
+        if (stopListening()) return
+        runOnUiThread {
+            findViewById<TextView>(R.id.degree).text = degrees.toString()
+            findViewById<TextView>(R.id.angle).text = angle.toString()
+            findViewById<TextView>(R.id.direction).text = direction.name
+        }
     }
 
 }

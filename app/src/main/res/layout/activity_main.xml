@@ -176,7 +176,6 @@
         </TableRow>
 
         <TableRow>
-
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
@@ -195,7 +194,62 @@
                 android:textSize="18sp" />
         </TableRow>
 
+        <TableRow>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:gravity="center"
+                android:text="Degree"
+                android:textSize="18sp" />
 
+            <TextView
+                android:id="@+id/degree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:text="0"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:gravity="center"
+                android:text="Angle"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/angle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:text="0"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:gravity="center"
+                android:text="Direction"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/direction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:text="0"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+        </TableRow>
 
     </TableLayout>
 

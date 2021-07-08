@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), DirectionFinder {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         setContentView(R.layout.activity_main)
-        startToFindSensor(this)
+        startToFindSensor(this,Sensor.TYPE_ACCELEROMETER,Sensor.TYPE_MAGNETIC_FIELD,Sensor.TYPE_LIGHT,Sensor.TYPE_GYROSCOPE)
     }
 
 

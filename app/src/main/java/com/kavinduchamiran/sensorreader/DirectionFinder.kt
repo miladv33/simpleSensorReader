@@ -13,28 +13,19 @@ interface DirectionFinder : SensorEventListener, SensorChangesListener {
 
     fun stopListening(): Boolean
 
-    fun startToFindSensor(context: Context){
+    fun startToFindSensor(context: Context,vararg sensorType:Int){
         with(SensorObject) {
-
             mSensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-            mAccelerometer = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
-                mSensorManager?.registerListener(
-                    this@DirectionFinder,
-                    accelerometer,
-                    SensorManager.SENSOR_DELAY_GAME,
-                    SensorManager.SENSOR_DELAY_UI
-                )
+            for (type in sensorType) {
+                mAccelerometer = mSensorManager?.getDefaultSensor(type)?.also { accelerometer ->
+                    mSensorManager?.registerListener(
+                        this@DirectionFinder,
+                        accelerometer,
+                        SensorManager.SENSOR_DELAY_GAME,
+                        SensorManager.SENSOR_DELAY_UI
+                    )
+                }
             }
-            mMagnet = mSensorManager?.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also { magneticField ->
-                mSensorManager?.registerListener(
-                    this@DirectionFinder,
-                    magneticField,
-                    SensorManager.SENSOR_DELAY_GAME,
-                    SensorManager.SENSOR_DELAY_UI
-                )
-            }
-            mLight = mSensorManager?.getDefaultSensor(Sensor.TYPE_LIGHT)
-            mGyroscope = mSensorManager?.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         }
     }
 

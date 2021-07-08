@@ -17,7 +17,33 @@ import java.lang.Math.round
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity(), DirectionFinder {
+
     private var resume = false
+    override fun startToFindSensor() {
+        with(SensorObject) {
+
+            mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+            mAccelerometer = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
+                    mSensorManager?.registerListener(
+                        this@MainActivity,
+                        accelerometer,
+                        SensorManager.SENSOR_DELAY_NORMAL,
+                        SensorManager.SENSOR_DELAY_UI
+                    )
+                }
+            mMagnet = mSensorManager?.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also { magneticField ->
+                    mSensorManager?.registerListener(
+                        this@MainActivity,
+                        magneticField,
+                        SensorManager.SENSOR_DELAY_NORMAL,
+                        SensorManager.SENSOR_DELAY_UI
+                    )
+                }
+            mLight = mSensorManager?.getDefaultSensor(Sensor.TYPE_LIGHT)
+            mGyroscope = mSensorManager?.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
@@ -27,20 +53,23 @@ class MainActivity : AppCompatActivity(), DirectionFinder {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         setContentView(R.layout.activity_main)
+        startToFindSensor()
     }
 
 
     override fun onResume() {
         super.onResume()
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
-        mSensorManager.registerListener(this, mMagnet, SensorManager.SENSOR_DELAY_NORMAL)
-        mSensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL)
-        mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL)
+        with(SensorObject) {
+            mSensorManager?.registerListener(this@MainActivity, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL)
+            mSensorManager?.registerListener(this@MainActivity, mMagnet, SensorManager.SENSOR_DELAY_NORMAL)
+            mSensorManager?.registerListener(this@MainActivity, mLight, SensorManager.SENSOR_DELAY_NORMAL)
+            mSensorManager?.registerListener(this@MainActivity, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL)
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        mSensorManager.unregisterListener(this)
+        SensorObject.mSensorManager?.unregisterListener(this)
     }
 
     fun resumeReading(view: View) {
@@ -51,39 +80,11 @@ class MainActivity : AppCompatActivity(), DirectionFinder {
         this.resume = false
     }
 
-    override var mSensorManager: SensorManager
-        get() = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        set(value) {}
-    override var mAccelerometer: Sensor?
-        get() = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
-            mSensorManager.registerListener(
-                this,
-                accelerometer,
-                SensorManager.SENSOR_DELAY_NORMAL,
-                SensorManager.SENSOR_DELAY_UI
-            )
-        }
-        set(value) {}
-    override var mMagnet: Sensor?
-        get() = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also { magneticField ->
-            mSensorManager.registerListener(
-                this,
-                magneticField,
-                SensorManager.SENSOR_DELAY_NORMAL,
-                SensorManager.SENSOR_DELAY_UI
-            )
-        }
-        set(value) {}
-    override var mLight: Sensor
-        get() = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT)
-        set(value) {}
-    override var mGyroscope: Sensor
-        get() = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-        set(value) {}
 
     override fun stopListening(): Boolean {
         return !resume
     }
+
 
     override fun onAccelerometerChanged(accelerometerReading: FloatArray) {
         if (stopListening()) return
@@ -115,6 +116,12 @@ class MainActivity : AppCompatActivity(), DirectionFinder {
 
     override fun onMagnetChanged(accelerometerReading: FloatArray) {
         if (stopListening()) return
+    }
+
+    override fun onUpdateOrientationAngles(degrees: Double, angle: Int, direction: Direction) {
+        Log.i("miladTestOrientation", "updateOrientationAngles: degrees: $degrees")
+        Log.i("miladTestOrientation", "updateOrientationAngles: angle: $angle")
+        Log.i("miladTestOrientation", "updateOrientationAngles: direction: $direction")
     }
 
 }

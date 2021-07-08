@@ -13,19 +13,28 @@ interface DirectionFinder : SensorEventListener, SensorChangesListener {
 
     fun stopListening(): Boolean
 
-    fun startToFindSensor(context: Context,vararg sensorType:Int){
+    fun startToFindSensor(context: Context){
         with(SensorObject) {
+
             mSensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-            for (type in sensorType) {
-                mAccelerometer = mSensorManager?.getDefaultSensor(type)?.also { accelerometer ->
-                    mSensorManager?.registerListener(
-                        this@DirectionFinder,
-                        accelerometer,
-                        SensorManager.SENSOR_DELAY_GAME,
-                        SensorManager.SENSOR_DELAY_UI
-                    )
-                }
+            mAccelerometer = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also { accelerometer ->
+                mSensorManager?.registerListener(
+                    this@DirectionFinder,
+                    accelerometer,
+                    SensorManager.SENSOR_DELAY_GAME,
+                    SensorManager.SENSOR_DELAY_UI
+                )
             }
+            mMagnet = mSensorManager?.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also { magneticField ->
+                mSensorManager?.registerListener(
+                    this@DirectionFinder,
+                    magneticField,
+                    SensorManager.SENSOR_DELAY_GAME,
+                    SensorManager.SENSOR_DELAY_UI
+                )
+            }
+            mLight = mSensorManager?.getDefaultSensor(Sensor.TYPE_LIGHT)
+            mGyroscope = mSensorManager?.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
         }
     }
 
@@ -37,9 +46,6 @@ interface DirectionFinder : SensorEventListener, SensorChangesListener {
         if (event != null) {
             with(SensorObject) {
                 if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) {
-                    Log.i("miladTestInterface", "onSensorChanged: X = ${event.values[0]}")
-                    Log.i("miladTestInterface", "onSensorChanged: Y = ${event.values[1]}")
-                    Log.i("miladTestInterface", "onSensorChanged: Z = ${event.values[2]}")
                     System.arraycopy(
                         event.values,
                         0,
@@ -47,33 +53,20 @@ interface DirectionFinder : SensorEventListener, SensorChangesListener {
                         0,
                         accelerometerReading.size
                     )
-                    onAccelerometerChanged(event.values)
+                    onAccelerometerChanged(accelerometerReading)
                 }
                 if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) {
                     System.arraycopy(event.values, 0, magneReading, 0, magneReading.size)
-                    onMagnetChanged(event.values)
+                    onMagnetChanged(magneReading)
                 }
                 if (event.sensor.type == Sensor.TYPE_LIGHT) {
                     System.arraycopy(event.values, 0, lightReading, 0, lightReading.size)
-                    onLightChanged(event.values)
-                    Log.i("miladTestInterface", "onSensorChanged: light = ${event.values[0]}")
+                    onLightChanged(lightReading)
                 }
 
                 if (event.sensor.type == Sensor.TYPE_GYROSCOPE) {
                     System.arraycopy(event.values, 0, gyroscopeReading, 0, magneReading.size)
-                    onGyroscopeChanged(event.values)
-                    Log.i(
-                        "miladTestInterface",
-                        "onSensorChanged: x = ${((Math.toDegrees(event.values[0].toDouble()) + 360) % 360)}"
-                    )
-                    Log.i(
-                        "miladTestInterface",
-                        "onSensorChanged: y = ${((Math.toDegrees(event.values[1].toDouble()) + 360) % 360)}"
-                    )
-                    Log.i(
-                        "miladTestInterface",
-                        "onSensorChanged: z = ${((Math.toDegrees(event.values[2].toDouble()) + 360) % 360)}"
-                    )
+                    onGyroscopeChanged(gyroscopeReading)
                 }
                 updateOrientationAngles(accelerometerReading, magneReading)
             }

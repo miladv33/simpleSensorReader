@@ -273,12 +273,12 @@
 
     <ImageView
         android:id="@+id/rotateImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginBottom="148dp"
-        android:background="@color/buttonBackground"
+        android:background="#4CAF50"
         android:onClick="resumeReading"
-        android:src="@drawable/ic_launcher_background"
+        android:src="@drawable/car_steering_wheel"
         android:text="Start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/stop_button"

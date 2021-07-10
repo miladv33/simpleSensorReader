@@ -10,7 +10,7 @@ interface IJoystickCarDriver {
     fun drive(joyStickView: JoyStickView, newYPosition: Float) {
         with(CarControllers) {
             rightController.x = (joyStickView.centerX.toInt() * 10)
-            rightController.y = Math.toDegrees(newYPosition.toDouble()).toInt() * 10
+            rightController.y = Math.toDegrees(newYPosition.toDouble()).toInt() * carDriverIntensity
             setJoystickView(joyStickView)
         }
     }

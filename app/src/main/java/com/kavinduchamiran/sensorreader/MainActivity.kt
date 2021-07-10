@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import java.lang.Math.round
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity(), DirectionFinder {
             findViewById<TextView>(R.id.acc_X).text = accelerometerReading[0].toString()
             findViewById<TextView>(R.id.acc_Y).text = accelerometerReading[1].toString()
             findViewById<TextView>(R.id.acc_Z).text = accelerometerReading[2].toString()
+            findViewById<ImageView>(R.id.rotateImage).rotation = accelerometerReading[1] * 5
         }
     }
 

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,7 +15,12 @@ public class JoyStickView extends View implements Runnable {
     private OnJoystickMoveListener onJoystickMoveListener; // Listener
     private int xPosition = 0; // Touch x position
     private int yPosition = 0; // Touch y position
-    private double centerX = 0; // Center view x position
+
+    public double getCenterX() {
+        return centerX;
+    }
+
+    double centerX = 0; // Center view x position
     private double centerY = 0; // Center view y position
     public double startRange = 0;
     public double endRange = 0;
@@ -187,7 +193,9 @@ public class JoyStickView extends View implements Runnable {
         }
 //        if (inMainCircle)
         invalidate();
-
+        Log.i("miladTestPosition", "xPosition: " + xPosition);
+        Log.i("miladTestPosition", "yPosition: " + yPosition);
+        Log.i("miladTestPosition", "centerX: " + centerX);
         return true;
     }
 

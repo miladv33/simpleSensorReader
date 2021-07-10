@@ -1,26 +1,21 @@
 package com.kavinduchamiran.sensorreader
 
-import android.content.Context
 import android.content.pm.ActivityInfo
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.os.Bundle
-import android.util.Log
+import android.os.SystemClock
+import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import java.lang.Math.round
-import kotlin.math.roundToInt
+import com.kavinduchamiran.sensorreader.carDriver.IJoystickCarDriver
+import com.kavinduchamiran.sensorreader.customView.joystick.JoyStickView
+import com.kavinduchamiran.sensorreader.model.Controller
 
-class MainActivity : AppCompatActivity(), DirectionFinder {
+class MainActivity : AppCompatActivity(), DirectionFinder, IJoystickCarDriver {
 
     private var resume = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
@@ -32,7 +27,6 @@ class MainActivity : AppCompatActivity(), DirectionFinder {
         setContentView(R.layout.activity_main)
         startToFindSensor(this)
     }
-
 
     override fun onResume() {
         super.onResume()
@@ -69,7 +63,8 @@ class MainActivity : AppCompatActivity(), DirectionFinder {
             findViewById<TextView>(R.id.acc_X).text = accelerometerReading[0].toString()
             findViewById<TextView>(R.id.acc_Y).text = accelerometerReading[1].toString()
             findViewById<TextView>(R.id.acc_Z).text = accelerometerReading[2].toString()
-            findViewById<ImageView>(R.id.rotateImage).rotation = accelerometerReading[1] * 5
+//            findViewById<ImageView>(R.id.rotateImage).rotation = accelerometerReading[1] * 5
+            drive(findViewById(R.id.joystick), accelerometerReading[1])
         }
     }
 

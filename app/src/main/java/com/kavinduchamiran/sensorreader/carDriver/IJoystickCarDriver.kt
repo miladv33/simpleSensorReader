@@ -9,8 +9,8 @@ interface IJoystickCarDriver {
 
     fun drive(joyStickView: JoyStickView, newYPosition: Float) {
         with(CarControllers) {
-            rightController.x = (joyStickView.centerX.toInt() * 10)
-            rightController.y = Math.toDegrees(newYPosition.toDouble()).toInt() * carDriverIntensity
+            rightController.x = (joyStickView.centerX.toInt())
+            rightController.y = joyStickView.centerX.toInt() +  (Math.toDegrees(newYPosition.toDouble()).toInt() * carDriverIntensity)
             setJoystickView(joyStickView)
         }
     }
@@ -26,7 +26,7 @@ interface IJoystickCarDriver {
         val eventTime = SystemClock.uptimeMillis() + 50
         val metaState = 0
         val motionEvent: Int
-        if (controller.getX() == 0) {
+        if (controller.x == 0) {
             view.justShowTouch = false
             motionEvent = MotionEvent.ACTION_UP
         } else {
